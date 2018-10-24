@@ -23,7 +23,11 @@ mainClassName = 'dk.aau.cs.ds306e18.tournament.Main'
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     compile 'com.google.guava:guava:23.0'
-
+    // embedded database that runs in JVM alongside project application
+    compile group: 'org.apache.derby', name: 'derbyclient', version: '10.14.2.0'
+    compile group: 'org.apache.derby', name: 'derbytools', version: '10.14.2.0'
+    runtime group: 'org.apache.derby', name: 'derbyclient', version: '10.14.2.0'
+    runtime group: 'org.apache.derby', name: 'derbytools', version: '10.14.2.0'
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
 }
@@ -33,6 +37,9 @@ repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    // maven repos might help resolving dependencies on different platforms
+    mavenLocal()
+    mavenCentral()
 }
 
 // Setup modules
