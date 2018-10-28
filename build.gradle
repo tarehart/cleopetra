@@ -24,10 +24,7 @@ dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     compile 'com.google.guava:guava:23.0'
     // embedded database that runs in JVM alongside project application
-    compile group: 'org.apache.derby', name: 'derbyclient', version: '10.14.2.0'
-    compile group: 'org.apache.derby', name: 'derbytools', version: '10.14.2.0'
-    runtime group: 'org.apache.derby', name: 'derbyclient', version: '10.14.2.0'
-    runtime group: 'org.apache.derby', name: 'derbytools', version: '10.14.2.0'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.196'
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
 }
