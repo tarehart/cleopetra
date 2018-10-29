@@ -9,22 +9,22 @@ public class CreateTables {
         Connection con = null;
         Statement stmt = null;
 
-        /*try {
-        con = DriverManager.getConnection("jdbc:h2:~/test", "SA", "");
+        try {
+        con = DriverManager.getConnection("jdbc:h2:./database/db", "SA", "");
         stmt = con.createStatement();
 
-        ResultSet rs = stmt.executeQuery("select * from bot_tbl");
+        ResultSet rs = stmt.executeQuery("select * from bot_tb");
 
             while (rs.next()) {
                 System.out.println(rs.getString("name"));
             }
         }  catch (Exception e) {
             e.printStackTrace(System.out);
-        }*/
+        }
 
 
-        try {
-            con = DriverManager.getConnection("jdbc:h2:~/$PROJECT_DIR$/database", "SA", "");
+        /*try {
+            con = DriverManager.getConnection("jdbc:h2:./database/db", "SA", "");
             stmt = con.createStatement();
 
 
@@ -44,6 +44,6 @@ public class CreateTables {
 
         }  catch (Exception e) {
             e.printStackTrace(System.out);
-        }
+        }*/
     }
 }
