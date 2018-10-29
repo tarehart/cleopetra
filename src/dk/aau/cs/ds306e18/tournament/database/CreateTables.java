@@ -1,32 +1,41 @@
 package dk.aau.cs.ds306e18.tournament.database;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class CreateTables {
 
     public static void main(String[] args) {
+    }
+
+    private void testReadFromTable() {
+        Connection con = null;
+        Statement stmt = null;
+
+        try {
+            con = DriverManager.getConnection("jdbc:h2:./database/db", "SA", "");
+            stmt = con.createStatement();
+
+            ResultSet rs = stmt.executeQuery("select * from bot_tb");
+
+            while (rs.next()) {
+                System.out.println(rs.getString("name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+    }
+
+    private void testCreateTable() {
 
         Connection con = null;
         Statement stmt = null;
 
         try {
-        con = DriverManager.getConnection("jdbc:h2:./database/db", "SA", "");
-        stmt = con.createStatement();
-
-        ResultSet rs = stmt.executeQuery("select * from bot_tb");
-
-            while (rs.next()) {
-                System.out.println(rs.getString("name"));
-            }
-        }  catch (Exception e) {
-            e.printStackTrace(System.out);
-        }
-
-
-        /*try {
             con = DriverManager.getConnection("jdbc:h2:./database/db", "SA", "");
             stmt = con.createStatement();
-
 
 
             stmt.executeUpdate("CREATE TABLE bot_tb (\n" +
@@ -42,8 +51,8 @@ public class CreateTables {
 
             con.commit();
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace(System.out);
-        }*/
+        }
     }
 }

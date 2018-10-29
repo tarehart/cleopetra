@@ -1,3 +1,0 @@
-2018-10-29 11:19:23 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLException: Table "BOT_TB" not found; SQL statement:
-select * from bot_tb [42102-196]
