@@ -27,6 +27,9 @@ dependencies {
     // Using GSON for serializing objects for transfer and storage
     compile 'com.google.code.gson:gson:2.8.5'
 
+    // The RLBot framework
+    compile 'org.rlbot.commons:framework:1.+'
+
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
 

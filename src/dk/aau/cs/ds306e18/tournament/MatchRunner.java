@@ -2,6 +2,7 @@ package dk.aau.cs.ds306e18.tournament;
 
 import dk.aau.cs.ds306e18.tournament.model.Bot;
 import dk.aau.cs.ds306e18.tournament.model.match.Match;
+import dk.aau.cs.ds306e18.tournament.rlbot.RLBotStalker;
 import dk.aau.cs.ds306e18.tournament.utility.ConfigFileEditor;
 
 import java.io.File;
@@ -13,6 +14,8 @@ public class MatchRunner {
 
     // both %s will be replaced with the directory of the rlbot.cfg
     private static final String COMMAND_FORMAT = "cmd.exe /c start cmd.exe /c \"cd %s & python \"%s\\run.py\"\"";
+
+    private static RLBotStalker stalker;
 
     /** Starts the given match in Rocket League. */
     public static boolean startMatch(RLBotSettings settings, Match match) {
@@ -37,6 +40,7 @@ public class MatchRunner {
             String command = String.format(COMMAND_FORMAT, pathToDirectory, pathToDirectory);
             System.out.println(command);
             Runtime.getRuntime().exec(command);
+            initStalker();
             return true;
 
         } catch (Exception err) {
@@ -106,6 +110,24 @@ public class MatchRunner {
             if (!file.exists() || !file.isFile() || file.isDirectory())
                 throw new IllegalStateException("The config file of the bot named '" + bot.getName()
                         + "' is not found (path: '" + path + ")'");
+        }
+    }
+
+    /** Initializes the RLBotStalker which fetches packets from the RLBot_Core_Interface.dll. */
+    private static void initStalker() {
+        // Create a RLBotStalker
+        if (stalker == null) {
+            try {
+                stalker = new RLBotStalker();
+            } catch (Exception e) {
+                System.err.println("Could not initialize RLBotStalker : " + e.getMessage());
+                stalker = null;
+            }
+        }
+
+        // Start stalker if it is not running
+        if (stalker != null && !stalker.isRunning()) {
+            stalker.start();
         }
     }
 }
