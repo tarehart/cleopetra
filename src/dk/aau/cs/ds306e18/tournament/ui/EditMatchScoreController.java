@@ -1,12 +1,16 @@
 package dk.aau.cs.ds306e18.tournament.ui;
 
 import dk.aau.cs.ds306e18.tournament.model.match.Match;
+import dk.aau.cs.ds306e18.tournament.rlbot.MatchRunner;
+import dk.aau.cs.ds306e18.tournament.utility.Alerts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class EditMatchScoreController {
 
@@ -124,7 +128,18 @@ public class EditMatchScoreController {
 
     @FXML
     private void FetchBtnPressed(ActionEvent actionEvent) {
-        // TODO Fetch the match result directly from the game using RLBotDLl
+        try {
+            int blueScore = MatchRunner.fetchBlueScore();
+            int orangeScore = MatchRunner.fetchOrangeScore();
+
+            blueTeamNameLabel.setText(String.valueOf(blueScore));
+            orangeTeamNameLabel.setText(String.valueOf(orangeScore));
+
+            Alerts.infoNotification("Fetched score", String.format("Score was %d-%d", blueScore, orangeScore));
+
+        } catch (IOException e) {
+            Alerts.errorNotification("Could bot not fetch score", e.getMessage());
+        }
     }
 
     @FXML

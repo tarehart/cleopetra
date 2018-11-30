@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="exitPopup" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragged="#windowDragged" onMousePressed="#windowPressed" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="dk.aau.cs.ds306e18.tournament.ui.EditMatchScoreController">
+<AnchorPane id="exitPopup" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragged="#windowDragged" onMousePressed="#windowPressed" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.aau.cs.ds306e18.tournament.ui.EditMatchScoreController">
    <children>
       <VBox alignment="CENTER">
          <children>
@@ -71,9 +71,9 @@
             </CheckBox>
             <HBox>
                <children>
-                  <Button disable="true" mnemonicParsing="false" onAction="#FetchBtnPressed" text="Fetch from RL" />
+                  <Button mnemonicParsing="false" onAction="#FetchBtnPressed" text="Fetch from RL" />
                   <Pane minWidth="90.0" HBox.hgrow="ALWAYS" />
-                  <Button minWidth="65.0" mnemonicParsing="false" onAction="#onSaveBtnPressed" text="Save" fx:id="saveButton">
+                  <Button fx:id="saveButton" minWidth="65.0" mnemonicParsing="false" onAction="#onSaveBtnPressed" text="Save">
                      <HBox.margin>
                         <Insets right="8.0" />
                      </HBox.margin>

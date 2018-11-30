@@ -295,6 +295,7 @@ public class BracketOverviewTabController implements MatchChangeListener {
         if (Tournament.get().canStart()) {
             Tournament.get().start();
             update();
+            MatchRunner.initStalker();
         } else {
             // TODO Show error message to user
             System.out.println("Can't start tournament.");

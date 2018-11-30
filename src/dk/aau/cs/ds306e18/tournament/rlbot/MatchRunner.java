@@ -5,8 +5,11 @@ import dk.aau.cs.ds306e18.tournament.model.match.Match;
 import dk.aau.cs.ds306e18.tournament.rlbot.RLBotStalker;
 import dk.aau.cs.ds306e18.tournament.utility.Alerts;
 import dk.aau.cs.ds306e18.tournament.utility.ConfigFileEditor;
+import rlbot.flat.GameTickPacket;
+import rlbot.flat.PlayerInfo;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -15,6 +18,9 @@ public class MatchRunner {
 
     // both %s will be replaced with the directory of the rlbot.cfg
     private static final String COMMAND_FORMAT = "cmd.exe /c start cmd.exe /c \"cd %s & python \"%s\\run.py\"\"";
+
+    private static final int BLUE_TEAM_INDEX = 0;
+    private static final int ORANGE_TEAM_INDEX = 1;
 
     private static RLBotStalker stalker;
 
@@ -115,7 +121,7 @@ public class MatchRunner {
     }
 
     /** Initializes the RLBotStalker which fetches packets from the RLBot_Core_Interface.dll. */
-    private static void initStalker() {
+    public static void initStalker() {
         // Create a RLBotStalker
         if (stalker == null) {
             try {
@@ -129,6 +135,42 @@ public class MatchRunner {
         // Start stalker if it is not running
         if (stalker != null && !stalker.isRunning()) {
             stalker.start();
+        }
+    }
+
+    /** Fetch the score of blue team from Rocket League. */
+    public static int fetchBlueScore() throws IOException {
+        return fetchScoreOfTeam(BLUE_TEAM_INDEX);
+    }
+
+    /** Fetch the score of orange team from Rocket League. */
+    public static int fetchOrangeScore() throws IOException {
+        return fetchScoreOfTeam(ORANGE_TEAM_INDEX);
+    }
+
+    /** Fetch the score of a team from Rocket League. */
+    private static int fetchScoreOfTeam(int teamIndex) throws IOException {
+
+        if (stalker == null) {
+            // Stalker was not started
+            initStalker();
+            throw new IOException("Started RLBotStalker. Please wait a few seconds.");
+        } else {
+
+            GameTickPacket lastPacket = stalker.getLastPacket();
+            if (lastPacket == null) {
+                throw new IOException("Could not fetch a packet from Rocket League.");
+            }
+
+            // Iterate over all players to find the score of the team
+            int score = 0;
+            for (int i = 0; i < lastPacket.playersLength(); i++) {
+                PlayerInfo bot = lastPacket.players(i);
+                if (bot.team() == teamIndex) {
+                    score += bot.scoreInfo().goals();
+                }
+            }
+            return score;
         }
     }
 }
