@@ -28,7 +28,7 @@ public class DoubleEliminationFormat extends Elimination implements MatchPlayedL
         generateUpperBracket(rounds);
         seedUpperBracket(seededTeams, rounds);
         generateLowerBracket(rounds);
-        removeByes();
+        removeByes( rounds);
         status = StageStatus.RUNNING;
         finalMatch.registerMatchPlayedListener(this);
     }
@@ -202,16 +202,20 @@ public class DoubleEliminationFormat extends Elimination implements MatchPlayedL
         // The final is the last match in the list
         finalMatch = new Match().setBlueToWinnerOf(finalMatch).setOrangeToWinnerOf(lowerBracketMatches.get(lowerBracketMatches.size() - 1));
 
-        //Creates an array of matches to itarate trough when generating the lower bracket.
+        //Creates an array of matches to iterate trough when generating the lower bracket.
         lowerBracketMatchesArray = new Match[lowerBracketMatches.size()];
         lowerBracketMatchesArray = lowerBracketMatches.toArray(lowerBracketMatchesArray);
     }
 
     //The loop will remove the matches that would normally contain bye's.
-    private void removeByes() {
+    private void removeByes(int roundsInUpperBracket) {
 
+        int matchesInFirstRound = (int) Math.pow(2, roundsInUpperBracket - 2);
         //Iterates for each match in the matches array
-        for (Match match : lowerBracketMatchesArray) {
+
+        for (int i=0;i<matchesInFirstRound;  i++) {
+
+            Match match = lowerBracketMatchesArray[i];
 
             int byes = 0;
             //Checks if one or both teams are a bye
@@ -239,10 +243,14 @@ public class DoubleEliminationFormat extends Elimination implements MatchPlayedL
                 if (match.getWinnerDestination().getWinnerDestination().equals(match.getWinnerDestination())) {
                     match.getWinnerDestination().getWinnerDestination().setOrangeToLoserOf(match.getWinnerDestination().getOrangeFromMatch());
                 }
+
                 lowerBracketMatches.remove(match.getWinnerDestination());
                 lowerBracketMatches.remove(match);
             }
+
         }
+        //I don't actually believe this is needed
+        lowerBracketMatches.toArray(lowerBracketMatchesArray);
     }
 
 
