@@ -7,6 +7,7 @@ import dk.aau.cs.ds306e18.tournament.model.match.MatchPlayedListener;
 import dk.aau.cs.ds306e18.tournament.model.match.MatchStatus;
 import dk.aau.cs.ds306e18.tournament.model.tiebreaker.TieBreaker;
 import dk.aau.cs.ds306e18.tournament.ui.BracketOverviewTabController;
+import dk.aau.cs.ds306e18.tournament.ui.bracketObjects.DoubleEliminationNode;
 import dk.aau.cs.ds306e18.tournament.ui.bracketObjects.ModelCoupledUI;
 //import dk.aau.cs.ds306e18.tournament.ui.tabs.BracketOverview;
 import javafx.scene.Node;
@@ -97,8 +98,8 @@ public class DoubleEliminationFormat extends Elimination implements MatchPlayedL
     }
 
     @Override
-    public <T extends Node & ModelCoupledUI> T getBracketFXNode(BracketOverviewTabController bracketOverview) {
-        return null;
+    public DoubleEliminationNode getBracketFXNode(BracketOverviewTabController boc) {
+        return new DoubleEliminationNode(this, boc);
     }
 
     @Override
