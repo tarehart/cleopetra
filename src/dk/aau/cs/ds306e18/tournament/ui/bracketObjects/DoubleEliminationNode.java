@@ -18,7 +18,6 @@ import java.util.ArrayList;
 public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
 
     private final Insets MARGINS = new Insets(0, 0, 8, 0);
-    private final int CELL_SIZE = 50;
 
     private final DoubleEliminationFormat doubleElimination;
     private final BracketOverviewTabController boc;
@@ -39,18 +38,22 @@ public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
         getChildren().add(new Label("UPPER BRACKET"));
         getChildren().add(getUpperBracket(doubleElimination.getUpperBracketMatchesArray(), doubleElimination.getRounds()));
         getChildren().add(new Label("LOWER BRACKET"));
-        getChildren().add(getLowerBracket(doubleElimination.getFinalMatch(), null, null));
+        getChildren().add(getLowerBracket(doubleElimination.getFinalMatch()));
     }
 
 
-
+    /** Create a GridPane containing all given matches.
+     * This is used to visualise the upper bracket.
+     * Code: all but final match ripped from Nico/SingleEliminationNode.
+     * @param matchArray an array of matches to be inserted in the GridPane.
+     * @param rounds the number of rounds in the stage.
+     * @return a GridPane containing all matches in the given array. */
     private GridPane getUpperBracket(Match[] matchArray, int rounds) {
-        //Match[] matchArray = singleElimination.getMatchesAsArray();
-        //int rounds = singleElimination.getRounds();
 
         GridPane content = new GridPane();
 
         int m = 0; // match index
+        int CELL_SIZE = 50;
         for (int r = 0; r < rounds; r++) {
             int matchesInRound = pow2(r);
             int column = rounds - 1 - r;
@@ -84,9 +87,11 @@ public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
         int column = rounds;
         int cellSpan = pow2(column);
         VBox box = new VBox();
+
         MatchVisualController mvc = boc.loadVisualMatch(finalMatch);
         mvcs.add(mvc);
         box.getChildren().add(mvc.getRoot());
+
         box.setAlignment(Pos.CENTER);
         box.setMinHeight(CELL_SIZE * cellSpan);
         content.add(box, column,0);
@@ -97,21 +102,19 @@ public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
         return content;
     }
 
+    /** Creates a HBox that has a visual representation of the lower bracket.
+     * @param finalMatch the final match of the bracket.
+     * @return a HBox containing a visual representation of the lower bracket. */
+    private HBox getLowerBracket(Match finalMatch) {
 
-    private HBox getLowerBracket(Match finalMatch, ArrayList<Match> upperBracket, ArrayList<Match> lowerBracket) {
-
-
-        /* Concept: Starting point is finalMatch. Then get the two matches: blueFromMatch and orangeFromMatch, end check
-        * is these upper or lower. The matches found that is in lower is the matches in the next round. Then repeat the
-        * process from the newly found matches that is in lower bracket. */
-
-        ArrayList<MatchIndex> miArray = getNextLevelMatches(finalMatch, 0);
+        //Get all matches that is in the lower bracket and their level in the tree/bracket
+        ArrayList<MatchWithLevel> miArray = getNextLevelMatches(finalMatch, 0);
 
         //Get highest index
         int highestIndex = 0;
-        for (MatchIndex matchIndex : miArray) {
-            if(highestIndex < matchIndex.getLevel())
-                highestIndex = matchIndex.getLevel();
+        for (MatchWithLevel matchWithLevel : miArray) {
+            if(highestIndex < matchWithLevel.getLevel())
+                highestIndex = matchWithLevel.getLevel();
         }
 
         //Create the visuals
@@ -121,9 +124,9 @@ public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
             VBox round = new VBox();
 
             //Find all matchIndex that has the same level as i
-            for (MatchIndex matchIndex : miArray) {
-                if(matchIndex.getLevel() == i){
-                    MatchVisualController mvc = boc.loadVisualMatch(matchIndex.getMatch());
+            for (MatchWithLevel matchWithLevel : miArray) {
+                if(matchWithLevel.getLevel() == i){
+                    MatchVisualController mvc = boc.loadVisualMatch(matchWithLevel.getMatch());
                     mvcs.add(mvc);
                     round.getChildren().add(mvc.getRoot());
                 }
@@ -135,36 +138,30 @@ public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
         return content;
     }
 
-    /** index 0 = final match
-     * @param match
-     * @param level
-     * @return
-     */
-    private ArrayList<MatchIndex> getNextLevelMatches(Match match, int level) {
+    /** Recursive method that takes a match and returns an arrayList of all
+     * its children and the levels of each child.
+     * @param match a match to use as parent.
+     * @param level the level of the given match in the lower bracket tree.
+     * @return an arrayList of all child matches of the given match. */
+    private ArrayList<MatchWithLevel> getNextLevelMatches(Match match, int level) {
 
         Match matchChild1 = match.getBlueFromMatch();
         Match matchChild2 = match.getOrangeFromMatch();
-
-        ArrayList<MatchIndex> miArray = new ArrayList<>();
+        ArrayList<MatchWithLevel> miArray = new ArrayList<>();
 
         //UpperBracketMatchCheck
-        if(matchChild1 != null && !isMatchInLowerBracket(matchChild1))
-            matchChild1 = null;
-
-        if(matchChild2 != null && !isMatchInLowerBracket(matchChild2))
-            matchChild2 = null;
+        if(matchChild1 != null && !isMatchInLowerBracket(matchChild1)) matchChild1 = null;
+        if(matchChild2 != null && !isMatchInLowerBracket(matchChild2)) matchChild2 = null;
 
         //Recursive call if child is not null
-        if(matchChild1 != null){
+        if(matchChild1 != null)
             miArray.addAll(getNextLevelMatches(matchChild1, level + 1));
-        }
 
-        if(matchChild2 != null){
+        if(matchChild2 != null)
             miArray.addAll(getNextLevelMatches(matchChild2, level + 1));
-        }
 
         //Return the array with this match
-        miArray.add(new MatchIndex(match, level));
+        miArray.add(new MatchWithLevel(match, level));
         return miArray;
     }
 
@@ -177,122 +174,6 @@ public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
 
         return false;
     }
-
-    private GridPane getLowerBracket(Match[] matchArray, int rounds) {
-        //Match[] matchArray = singleElimination.getMatchesAsArray();
-        //int rounds = singleElimination.getRounds();
-
-        //TODO DEN BLIVER TEGNET FRA HØJRE MOD VENSTRE, SÅ ÆNDRE NOGET MED R OG ROUNDS.
-
-        System.out.println("Rounds: " + rounds);
-
-        GridPane content = new GridPane();
-
-        int m = 0; // match index
-        int matchesInPriveousLower = 0;
-        for (int r = 0; r < rounds; r++) {
-
-
-            //int matchesInPriveousLower = 0;
-            if(r != rounds - 1){ //todo r might need to be replaced with rounds.
-                matchesInPriveousLower = pow2(r+1);
-            }
-            int matchesInRoundUpper = pow2(r);
-            int matchesInRound = (int)Math.ceil((matchesInRoundUpper + (matchesInPriveousLower)) / 2d);
-
-
-            System.out.println("Round: " + r + " - Matches in round: " + matchesInRound + " - matchesInPrivLower: " + matchesInPriveousLower + " - MatchesInUpper: " + matchesInRoundUpper);
-
-            //int matchesInRound = (int)Math.ceil((pow2(r) / 2d));
-
-            int column = rounds - 1 - r;
-            int cellSpan = pow2(column);
-
-            // Add matches for round r
-            for (int i = 0; i < matchesInRound; i++) {
-
-                Match match = matchArray[m];
-                m++;
-                VBox box = new VBox();
-
-                // Some matches can be null
-                if (match != null) {
-                    MatchVisualController mvc = boc.loadVisualMatch(match);
-                    mvcs.add(mvc);
-                    box.getChildren().add(mvc.getRoot());
-                }
-
-                box.setAlignment(Pos.CENTER);
-                box.setMinHeight(CELL_SIZE * cellSpan);
-
-                content.add(box, column, (matchesInRound - 1 - i) * cellSpan);
-                content.setRowSpan(box, cellSpan);
-                content.setMargin(box, MARGINS);
-                content.setValignment(box, VPos.CENTER);
-            }
-
-            matchesInPriveousLower = matchesInRound;
-        }
-
-        return content;
-    }
-
-    /* Does work, but expect bracket gets drawn from right to left.
-    private GridPane getLowerBracket(Match[] matchArray, int rounds) {
-        //Match[] matchArray = singleElimination.getMatchesAsArray();
-        //int rounds = singleElimination.getRounds();
-
-        //TODO DEN BLIVER TEGNET FRA HØJRE MOD VENSTRE, SÅ ÆNDRE NOGET MED R OG ROUNDS.
-
-        GridPane content = new GridPane();
-
-        int m = 0; // match index
-        int matchesInPriveousLower = 0;
-        for (int r = 0; r < rounds; r++) {
-
-            //int matchesInPriveousLower = 0;
-            if(r != 0){ //todo r might need to be replaced with rounds.
-                matchesInPriveousLower = pow2(r-1);
-            }
-            int matchesInRoundUpper = pow2(r);
-            int matchesInRound = (int)Math.ceil((matchesInRoundUpper + (matchesInPriveousLower)) / 2d);
-
-
-            System.out.println("Round: " + r + " - Matches in round: " + matchesInRound);
-
-            //int matchesInRound = (int)Math.ceil((pow2(r) / 2d));
-
-            int column = rounds - 1 - r;
-            int cellSpan = pow2(column);
-
-            // Add matches for round r
-            for (int i = 0; i < matchesInRound; i++) {
-                Match match = matchArray[m];
-                m++;
-                VBox box = new VBox();
-
-                // Some matches can be null
-                if (match != null) {
-                    MatchVisualController mvc = boc.loadVisualMatch(match);
-                    mvcs.add(mvc);
-                    box.getChildren().add(mvc.getRoot());
-                }
-
-                box.setAlignment(Pos.CENTER);
-                box.setMinHeight(CELL_SIZE * cellSpan);
-
-                content.add(box, column, (matchesInRound - 1 - i) * cellSpan);
-                content.setRowSpan(box, cellSpan);
-                content.setMargin(box, MARGINS);
-                content.setValignment(box, VPos.CENTER);
-            }
-
-            matchesInPriveousLower = matchesInRound;
-        }
-
-        return content;
-    }
-    */
 
     /** Returns 2 to the power of n. */
     private int pow2(int n) {
@@ -317,12 +198,14 @@ public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
         mvcs.clear();
     }
 
-    private class MatchIndex {
+    /** Used when creating the lower bracket where
+     * the need for a match and its level is present. */
+    private class MatchWithLevel {
 
         private Match match;
         private int level;
 
-        public MatchIndex(Match match, int level) {
+        public MatchWithLevel(Match match, int level) {
             this.match = match;
             this.level = level;
         }
