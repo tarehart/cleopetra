@@ -234,14 +234,16 @@ public class DoubleEliminationFormat extends Elimination implements MatchPlayedL
             }
 
             // IF both teams are bye's pass loser from the previous match to the either the blue or orange position
-            //in the winner's winner's destination then delete both match and its winner destination
+            // in the winner's winner's destination then delete both match and its winner destination
             if (byes == 2) {
-                if (match.getWinnerDestination().getWinnerDestination().equals(match.getWinnerDestination())) {
+                if (match.getWinnerDestination().getWinnerDestination() != null && match.getWinnerDestination().getWinnerDestination().getBlueFromMatch().equals(match.getWinnerDestination())) {
                     match.getWinnerDestination().getWinnerDestination().setBlueToLoserOf(match.getWinnerDestination().getOrangeFromMatch());
+
                 }
 
-                if (match.getWinnerDestination().getWinnerDestination().equals(match.getWinnerDestination())) {
+                if (match.getWinnerDestination().getWinnerDestination() != null && match.getWinnerDestination().getWinnerDestination().getOrangeFromMatch().equals(match.getWinnerDestination())) {
                     match.getWinnerDestination().getWinnerDestination().setOrangeToLoserOf(match.getWinnerDestination().getOrangeFromMatch());
+
                 }
 
                 lowerBracketMatches.remove(match.getWinnerDestination());
