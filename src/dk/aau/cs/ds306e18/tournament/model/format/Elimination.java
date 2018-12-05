@@ -142,4 +142,11 @@ abstract class Elimination implements Format, MatchPlayedListener {
         return rounds;
     }
 
+    public Match getFinalMatch() {
+        return finalMatch;
+    }
+
+    public Match[] getUpperBracketMatchesArray() {
+        return upperBracketMatchesArray;
+    }
 }

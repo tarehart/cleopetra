@@ -12,9 +12,7 @@ import dk.aau.cs.ds306e18.tournament.ui.bracketObjects.ModelCoupledUI;
 import javafx.scene.Node;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DoubleEliminationFormat extends Elimination implements MatchPlayedListener {
@@ -119,6 +117,10 @@ public class DoubleEliminationFormat extends Elimination implements MatchPlayedL
 
     public List<Match> getUpperBracketMatches(){
         return upperBracketMatches;
+    }
+
+    public Match[] getLowerBracketMatchesArray() {
+        return lowerBracketMatchesArray;
     }
 
     @Override

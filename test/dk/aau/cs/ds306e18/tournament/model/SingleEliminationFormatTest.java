@@ -83,8 +83,8 @@ public class SingleEliminationFormatTest {
     public void seedTest02(){
         SingleEliminationFormat bracket = new SingleEliminationFormat();
         bracket.start(TestUtilities.generateSeededTeams(7,1));
-        assertNull(bracket.getMatchesAsArray()[6]);
-        assertEquals(1,bracket.getMatchesAsArray()[2].getBlueTeam().getInitialSeedValue());
+        assertNull(bracket.getUpperBracketMatchesArray()[6]);
+        assertEquals(1,bracket.getUpperBracketMatchesArray()[2].getBlueTeam().getInitialSeedValue());
     }
 
     //match 3 should be null and snd seed should be placed in next round
@@ -92,8 +92,8 @@ public class SingleEliminationFormatTest {
     public void seedTest03(){
         SingleEliminationFormat bracket = new SingleEliminationFormat();
         bracket.start(TestUtilities.generateSeededTeams(6,1));
-        assertNull(bracket.getMatchesAsArray()[4]);
-        assertEquals(2,bracket.getMatchesAsArray()[1].getBlueTeam().getInitialSeedValue());
+        assertNull(bracket.getUpperBracketMatchesArray()[4]);
+        assertEquals(2,bracket.getUpperBracketMatchesArray()[1].getBlueTeam().getInitialSeedValue());
     }
 
     //There should only be one match in first around, this should be the worst seeded teams.
@@ -102,11 +102,11 @@ public class SingleEliminationFormatTest {
     public void seedTest04(){
         SingleEliminationFormat bracket = new SingleEliminationFormat();
         bracket.start(TestUtilities.generateSeededTeams(5,1));
-        assertNull(bracket.getMatchesAsArray()[6]);
-        assertNull(bracket.getMatchesAsArray()[4]);
-        assertNull(bracket.getMatchesAsArray()[3]);
-        assertEquals(4,bracket.getMatchesAsArray()[5].getBlueTeam().getInitialSeedValue());
-        assertEquals(5,bracket.getMatchesAsArray()[5].getOrangeTeam().getInitialSeedValue());
+        assertNull(bracket.getUpperBracketMatchesArray()[6]);
+        assertNull(bracket.getUpperBracketMatchesArray()[4]);
+        assertNull(bracket.getUpperBracketMatchesArray()[3]);
+        assertEquals(4,bracket.getUpperBracketMatchesArray()[5].getBlueTeam().getInitialSeedValue());
+        assertEquals(5,bracket.getUpperBracketMatchesArray()[5].getOrangeTeam().getInitialSeedValue());
     }
 
     //Should return the correct amount of playable matches

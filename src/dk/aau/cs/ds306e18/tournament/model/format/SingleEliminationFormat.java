@@ -52,10 +52,6 @@ public class SingleEliminationFormat extends Elimination implements MatchPlayedL
         return finalMatch.getTreeAsListBFS().stream().filter(c -> c.hasBeenPlayed()).collect(Collectors.toList());
     }
 
-    public Match[] getMatchesAsArray() {
-        return this.upperBracketMatchesArray;
-    }
-
     @Override
     public void onMatchPlayed(Match match) {
         if (finalMatch.hasBeenPlayed()) {

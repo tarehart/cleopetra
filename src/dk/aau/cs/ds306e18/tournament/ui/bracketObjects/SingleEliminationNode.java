@@ -34,7 +34,7 @@ public class SingleEliminationNode extends GridPane implements ModelCoupledUI {
     private void update() {
         removeElements();
 
-        Match[] matchArray = singleElimination.getMatchesAsArray();
+        Match[] matchArray = singleElimination.getUpperBracketMatchesArray();
         int rounds = singleElimination.getRounds();
 
         int m = 0; // match index
