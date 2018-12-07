@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
 
     private final Insets MARGINS = new Insets(0, 0, 8, 0);
+    private final Font bracketLabelFont = new Font("Calibri", 28);
 
     private final DoubleEliminationFormat doubleElimination;
     private final BracketOverviewTabController boc;
@@ -35,9 +37,14 @@ public class DoubleEliminationNode extends VBox implements ModelCoupledUI {
     private void update() {
         removeElements();
 
-        getChildren().add(new Label("UPPER BRACKET"));
+        Label upperBracketLabel = new Label("UPPER BRACKET");
+        upperBracketLabel.setFont(bracketLabelFont);
+        getChildren().add(upperBracketLabel);
         getChildren().add(getUpperBracket(doubleElimination.getUpperBracketMatchesArray(), doubleElimination.getRounds()));
-        getChildren().add(new Label("LOWER BRACKET"));
+
+        Label lowerBracketLabel = new Label("LOWER BRACKET");
+        lowerBracketLabel.setFont(bracketLabelFont);
+        getChildren().add(lowerBracketLabel);
         getChildren().add(getLowerBracket(doubleElimination.getFinalMatch()));
     }
 

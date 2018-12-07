@@ -107,9 +107,15 @@ public class DoubleEliminationFormat extends Elimination implements MatchPlayedL
         return null;
     }
 
+    /** Repairs match-structure after deserialization. */
     @Override
     public void repair() {
-
+        // set final match to root of Match-tree
+        this.finalMatch = this.upperBracketMatchesArray[0];
+        // register listener for each finalMatch
+        this.finalMatch.registerMatchPlayedListener(this);
+        // recursively call postDeserializationRepair
+        this.finalMatch.postDeserializationRepair();
     }
 
     public List<Match> getLowerBracketMatches() {
